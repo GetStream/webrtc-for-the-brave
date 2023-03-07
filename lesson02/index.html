@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!--
+ *  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+-->
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+    <meta id="theme-color" name="theme-color" content="#ffffff">
+
+    <title>Peer connection</title>
+
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+
+<body>
+
+<div id="container">
+    <h1><a href="https://github.com/GetStream/webrtc-for-the-brave" title="WebRTC samples homepage">WebRTC samples</a>
+        <span>Peer connection</span></h1>
+
+    <video id="localVideo" playsinline autoplay muted></video>
+    <video id="remoteVideo" playsinline autoplay></video>
+
+    <div class="box">
+        <button id="startButton">Start</button>
+        <button id="callButton">Call</button>
+        <button id="hangupButton">Hang Up</button>
+    </div>
+
+    <div id="errorMsg"></div>
+</div>
+
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="js/main.js" async></script>
+
+</body>
+</html>
