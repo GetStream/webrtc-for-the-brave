@@ -1,7 +1,7 @@
 'use strict';
 
 // Put variables in global scope to make them available to the browser console.
-const constraints = window.constraints = {
+const constraints = {
     audio: false,
     video: { width: 1280, height: 720 }
 };
