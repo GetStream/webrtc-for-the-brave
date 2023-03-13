@@ -4,5 +4,5 @@ What: A learning center about WebRTC. We’ll call it “WebRTC for the brave”
 
 ### Sample Applications
 
-- Lesson1: [Get a Media Stream](https://getstream.github.io/webrtc-for-the-brave/lesson01/index.html)
-- Lesson2: [Peer connection](https://getstream.github.io/webrtc-for-the-brave/lesson02/index.html)
+- Lesson 1-1: [Get a Media Stream](https://getstream.github.io/webrtc-for-the-brave/lesson01/index.html)
+- Lesson 1-2: [Peer connection](https://getstream.github.io/webrtc-for-the-brave/lesson02/index.html)
