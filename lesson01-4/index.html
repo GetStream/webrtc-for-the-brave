@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--
+ *  Copyright (c) 2018 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+-->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+  <meta id="theme-color" name="theme-color" content="#ffffff">
+
+  <title>Screensharing</title>
+
+  <link rel="stylesheet" href="css/main.css"/>
+</head>
+
+<body>
+
+<div id="container">
+  <h1><a href="https://github.com/GetStream/webrtc-for-the-brave/tree/main/lesson01-4" title="WebRTC for The Brave">Screensharing Sample</a> <span>getDisplayMedia</span></h1>
+
+  <video id="gum-local" autoplay playsinline muted></video>
+  <button id="startButton" disabled>Start</button>
+  <fieldset id="options" style="display:none">
+    <legend>Advanced options</legend>
+    <select id="displaySurface">
+      <option value="default" selected>Show default sharing options</option>
+      <option value="browser">Prefer to share a browser tab</option>
+      <option value="window">Prefer to share a window</option>
+      <option value="monitor">Prefer to share an entire screen</option>
+    </select>
+  </fieldset>
+  <div id="errorMsg"></div>
+
+  <p>Display the screensharing stream from <code>getDisplayMedia()</code> in a video element.</p>
+
+</div>
+
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="js/main.js"></script>
+
+<script src="../../../js/lib/ga.js"></script>
+
+</body>
+</html>
