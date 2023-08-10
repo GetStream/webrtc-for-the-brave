@@ -1,6 +1,3 @@
-let rooms = {};
-let socketToRoom = {};
-
 const http = require('http');
 const server = http.createServer((req, res) => {
 });
@@ -9,6 +6,9 @@ server.listen(3000, () => {
 });
 
 const io = require('socket.io')(server);
+
+let rooms = {};
+let socketToRoom = {};
 
 io.on("connection", socket => {
     socket.on("join", data => {
