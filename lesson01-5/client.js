@@ -103,9 +103,6 @@ function renderVideo() {
                     remoteVideoRef.current.srcObject = ev.streams[0];
             };
 
-            // 자신의 video, audio track을 모두 자신의 RTCPeerConnection에 등록한 후에 room에 접속했다고 Signaling Server에 알린다.
-            // 왜냐하면 offer or answer을 주고받을 때의 RTCSessionDescription에 해당 video, audio track에 대한 정보가 담겨 있기 때문에
-            // 순서를 어기면 상대방의 MediaStream을 받을 수 없음
             newSocket.emit("join_room", {
                 room: "1234",
                 email: "sample@naver.com",
