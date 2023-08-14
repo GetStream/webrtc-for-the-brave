@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--
+ *  Copyright (c) 2018 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+-->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+  <meta id="theme-color" name="theme-color" content="#ffffff">
+
+  <title>The Signaling Server</title>
+  <link rel="stylesheet" href="css/main.css"/>
+</head>
+
+<body>
+
+<div id="container">
+  <h1><a href="https://github.com/GetStream/webrtc-for-the-brave/tree/main/lesson01-4" title="WebRTC for The Brave">The Signaling Server Sample</a> <span>Signaling Clients</span></h1>
+
+  <video id="local-video" autoplay playsinline muted></video>
+  <video id="gum-local" autoplay playsinline muted></video>
+
+  <div id="errorMsg"></div>
+
+  <p>Display the screensharing stream from <code>getDisplayMedia()</code> in a video element.</p>
+
+</div>
+
+<script src="/socket.io-client/dist/socket.io.js"></script>
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="client.js"></script>
+
+</body>
+</html>

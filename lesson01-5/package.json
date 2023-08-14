@@ -1,5 +1,9 @@
 {
   "dependencies": {
-    "socket.io": "^4.7.2"
+    "install": "^0.13.0",
+    "npm": "^9.8.1",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2",
+    "socketio": "^1.0.0"
   }
 }
