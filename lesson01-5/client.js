@@ -1,3 +1,5 @@
+'use strict';
+
 const io = require('socket.io-client'); // const io = require('socket.io-client');
 
 const socket = io('http://localhost:3000'); // Replace with your server's URL
@@ -9,15 +11,10 @@ const pc_config = {
     ],
 };
 
-const localVideo = document.getElementById('localVideo');
-const remoteVideo = document.getElementById('remoteVideo');
 const peerConnection = new RTCPeerConnection(pc_config);
 
 socket.on('connect', () => {
-    console.log('Connected to the server');
-
-    const userNum = Math.floor(Math.random() * 1000)
-    socket.emit("join", {room: "1234", name: "user" + userNum} + "@getstream.io");
+    console.log('Hello, successfully connected to the signaling server!');
 });
 
 socket.on("room_users", (data) => {
@@ -45,7 +42,7 @@ socket.on("getCandidate", (candidate) => {
 const createOffer = () => {
     console.log("create offer");
     peerConnection
-        .createOffer({ offerToReceiveAudio: true, offerToReceiveVideo: true })
+        .createOffer({offerToReceiveAudio: true, offerToReceiveVideo: true})
         .then(sdp => {
             peerConnection.setLocalDescription(new RTCSessionDescription(sdp));
             socket.emit("offer", sdp);
@@ -74,40 +71,48 @@ const createAnswer = (sdp) => {
     });
 };
 
-function renderVideo() {
-    navigator.mediaDevices
-        .getUserMedia({
-            video: true,
-            audio: true,
-        })
-        .then(stream => {
-            if (localVideo.current) localVideo.current.srcObject = stream;
+async function init(e) {
+    try {
+        navigator.mediaDevices
+            .getUserMedia({
+                video: true,
+                audio: true,
+            })
+            .then(stream => {
+                if (localVideo.current) localVideo.current.srcObject = stream;
 
-            stream.getTracks().forEach(track => {
-                peerConnection.addTrack(track, stream);
+                stream.getTracks().forEach(track => {
+                    peerConnection.addTrack(track, stream);
+                });
+                peerConnection.onicecandidate = e => {
+                    if (e.candidate) {
+                        console.log("onicecandidate");
+                        socket.emit("candidate", e.candidate);
+                    }
+                };
+                peerConnection.oniceconnectionstatechange = e => {
+                    console.log(e);
+                };
+
+                peerConnection.ontrack = ev => {
+                    console.log("add remotetrack success");
+                    if (remoteVideo.current)
+                        remoteVideo.current.srcObject = ev.streams[0];
+                };
+
+                socket.emit("join", {
+                    room: "1234",
+                    email: "skydoves@getstream.io",
+                });
+            })
+            .catch(error => {
+                console.log(`getUserMedia error: ${error}`);
             });
-            peerConnection.onicecandidate = e => {
-                if (e.candidate) {
-                    console.log("onicecandidate");
-                    socket.emit("candidate", e.candidate);
-                }
-            };
-            peerConnection.oniceconnectionstatechange = e => {
-                console.log(e);
-            };
+    } catch (e) {
 
-            peerConnection.ontrack = ev => {
-                console.log("add remotetrack success");
-                if (remoteVideo.current)
-                    remoteVideo.current.srcObject = ev.streams[0];
-            };
-
-            socket.emit("join", {
-                room: "1234",
-                email: "skydoves@getstream.io",
-            });
-        })
-        .catch(error => {
-            console.log(`getUserMedia error: ${error}`);
-        });
+    }
 }
+
+const localVideo = document.getElementById('localVideo');
+const remoteVideo = document.getElementById('remoteVideo');
+document.getElementById('startButton').addEventListener('click', e => init(e));
