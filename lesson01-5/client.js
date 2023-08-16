@@ -1,8 +1,14 @@
 'use strict';
 
-const io = require('socket.io-client'); // const io = require('socket.io-client');
+import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 
-const socket = io('http://localhost:3000'); // Replace with your server's URL
+const socket = io('http://localhost:3000', {
+    allowRequest: (req, callback) => {
+        const noOriginHeader = req.headers.origin === undefined;
+        callback(null, noOriginHeader);
+    }
+});
+
 const pc_config = {
     iceServers: [
         {
@@ -72,6 +78,7 @@ const createAnswer = (sdp) => {
 };
 
 async function init(e) {
+    console.log("render videos");
     try {
         navigator.mediaDevices
             .getUserMedia({
@@ -102,7 +109,7 @@ async function init(e) {
 
                 socket.emit("join", {
                     room: "1234",
-                    email: "skydoves@getstream.io",
+                    name: "skydoves@getstream.io",
                 });
             })
             .catch(error => {
@@ -115,4 +122,4 @@ async function init(e) {
 
 const localVideo = document.getElementById('localVideo');
 const remoteVideo = document.getElementById('remoteVideo');
-document.getElementById('startButton').addEventListener('click', e => init(e));
+document.querySelector('#join').addEventListener('click', e => init(e));

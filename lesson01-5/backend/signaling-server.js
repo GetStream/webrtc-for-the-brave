@@ -1,11 +1,15 @@
 const http = require('http');
 const server = http.createServer((req, res) => {
 });
+const io = require('socket.io')(server, {
+    allowRequest: (req, callback) => {
+        const noOriginHeader = req.headers.origin === undefined;
+        callback(null, noOriginHeader);
+    }
+});
 server.listen(3000, () => {
     console.log('Server listening on port 3000');
 });
-
-const io = require('socket.io')(server);
 
 let rooms = {};
 let socketToRoom = {};
