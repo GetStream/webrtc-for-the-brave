@@ -21,8 +21,12 @@
 <div id="container">
   <h1><a href="https://github.com/GetStream/webrtc-for-the-brave/tree/main/lesson01-5" title="WebRTC for The Brave">The Signaling Server Sample</a> <span>Signaling Clients</span></h1>
 
-  <video id="local-video" autoplay playsinline muted></video>
-  <video id="gum-local" autoplay playsinline muted></video>
+  <video id="localVideo" playsinline autoplay muted></video>
+  <video id="remoteVideo" playsinline autoplay></video>
+
+  <div class="box">
+    <button id="join">Join</button>
+  </div>
 
   <div id="errorMsg"></div>
 

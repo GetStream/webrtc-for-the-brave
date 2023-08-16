@@ -1,4 +1,4 @@
-import { io } from "socket.io-client" // const io = require('socket.io-client');
+const io = require('socket.io-client'); // const io = require('socket.io-client');
 
 const socket = io('http://localhost:3000'); // Replace with your server's URL
 const pc_config = {
@@ -17,7 +17,7 @@ socket.on('connect', () => {
     console.log('Connected to the server');
 
     const userNum = Math.floor(Math.random() * 1000)
-    socket.emit("join", {room: "1234", name: "user" + userNum});
+    socket.emit("join", {room: "1234", name: "user" + userNum} + "@getstream.io");
 });
 
 socket.on("room_users", (data) => {
@@ -56,7 +56,7 @@ const createOffer = () => {
 };
 
 const createAnswer = (sdp) => {
-    newPC.setRemoteDescription(new RTCSessionDescription(sdp)).then(() => {
+    peerConnection.setRemoteDescription(new RTCSessionDescription(sdp)).then(() => {
         console.log("answer set remote description success");
         peerConnection
             .createAnswer({
@@ -81,31 +81,30 @@ function renderVideo() {
             audio: true,
         })
         .then(stream => {
-            if (localVideoRef.current) localVideoRef.current.srcObject = stream;
+            if (localVideo.current) localVideo.current.srcObject = stream;
 
-            // 자신의 video, audio track을 모두 자신의 RTCPeerConnection에 등록한다.
             stream.getTracks().forEach(track => {
-                newPC.addTrack(track, stream);
+                peerConnection.addTrack(track, stream);
             });
-            newPC.onicecandidate = e => {
+            peerConnection.onicecandidate = e => {
                 if (e.candidate) {
                     console.log("onicecandidate");
-                    newSocket.emit("candidate", e.candidate);
+                    socket.emit("candidate", e.candidate);
                 }
             };
-            newPC.oniceconnectionstatechange = e => {
+            peerConnection.oniceconnectionstatechange = e => {
                 console.log(e);
             };
 
-            newPC.ontrack = ev => {
+            peerConnection.ontrack = ev => {
                 console.log("add remotetrack success");
-                if (remoteVideoRef.current)
-                    remoteVideoRef.current.srcObject = ev.streams[0];
+                if (remoteVideo.current)
+                    remoteVideo.current.srcObject = ev.streams[0];
             };
 
-            newSocket.emit("join_room", {
+            socket.emit("join", {
                 room: "1234",
-                email: "sample@naver.com",
+                email: "skydoves@getstream.io",
             });
         })
         .catch(error => {
