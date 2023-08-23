@@ -5,6 +5,11 @@ const io = require('socket.io')(server, {
     allowRequest: (req, callback) => {
         const noOriginHeader = req.headers.origin === undefined;
         callback(null, noOriginHeader);
+    },
+    transports: ['websocket', 'polling', 'flashsocket'],
+    cors: {
+        origin: "http://localhost:3000",
+        credentials: true
     }
 });
 server.listen(3000, () => {

@@ -3,10 +3,12 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 
 const socket = io('http://localhost:3000', {
-    allowRequest: (req, callback) => {
-        const noOriginHeader = req.headers.origin === undefined;
-        callback(null, noOriginHeader);
-    }
+    transports: ['websocket', 'polling', 'flashsocket'],
+    cors: {
+        origin: "http://localhost:3000",
+        credentials: true
+    },
+    withCredentials: true
 });
 
 const pc_config = {
@@ -19,24 +21,24 @@ const pc_config = {
 
 const peerConnection = new RTCPeerConnection(pc_config);
 
+
 socket.on('connect', () => {
     console.log('Hello, successfully connected to the signaling server!');
 });
 
 socket.on("room_users", (data) => {
     console.log("join:" + data);
+    createOffer()
 });
 
 socket.on("getOffer", (sdp) => {
-    console.log("get offer");
+    console.log("get offer:" + sdp);
     createAnswer(sdp);
-    console.log(sdp);
 });
 
 socket.on("getAnswer", (sdp) => {
-    console.log("get answer");
+    console.log("get answer:" + sdp);
     peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
-    console.log(sdp);
 });
 
 socket.on("getCandidate", (candidate) => {
@@ -116,7 +118,7 @@ async function init(e) {
                 console.log(`getUserMedia error: ${error}`);
             });
     } catch (e) {
-
+        console.log(e);
     }
 }
 
