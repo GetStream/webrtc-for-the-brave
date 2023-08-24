@@ -10,6 +10,11 @@ const io = require('socket.io')(server, {
     cors: {
         origin: "http://localhost:3000",
         credentials: true
+    },
+    extraHeaders: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "*",
+        "Access-Control-Allow-Headers": "*"
     }
 });
 server.listen(3000, () => {
