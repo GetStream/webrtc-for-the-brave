@@ -1,24 +1,25 @@
-const http = require('http');
-const server = http.createServer((req, res) => {
-});
-const io = require('socket.io')(server, {
-    allowRequest: (req, callback) => {
-        const noOriginHeader = req.headers.origin === undefined;
-        callback(null, noOriginHeader);
-    },
-    transports: ['websocket', 'polling', 'flashsocket'],
+const express = require('express');
+const cors = require('cors');
+const socketIo = require('socket.io')
+
+const app = express();
+
+app.use(cors());
+app.get('/', (req, res) => {
+    res.send('hello, word!');
+})
+
+const server = app.listen(3000, () => {
+    console.log('server is running on http://localhost:3000')
+})
+
+const io = socketIo(server, {
     cors: {
         origin: "http://localhost:3000",
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+        allowedHeaders: "*",
         credentials: true
     },
-    extraHeaders: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "*",
-        "Access-Control-Allow-Headers": "*"
-    }
-});
-server.listen(3000, () => {
-    console.log('Server listening on port 3000');
 });
 
 let rooms = {};
