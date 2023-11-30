@@ -5,3 +5,9 @@ video {
     width: var(--width);
     height: calc(var(--width) * 0.75);
 }
+
+div#container {
+    margin: 0 auto 0 auto;
+    max-width: 60em;
+    padding: 1em 1.5em 1.3em 1.5em;
+}
