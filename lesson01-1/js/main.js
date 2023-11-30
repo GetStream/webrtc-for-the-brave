@@ -1,45 +1,34 @@
 'use strict';
 
-// Put variables in global scope to make them available to the browser console.
-const constraints = {
+// Define video constraints
+const videoConstraints = {
     audio: false,
-    video: { width: 1280, height: 720 }
+    video: {width: 1280, height: 720}
 };
 
-function handleSuccess(stream) {
-    const video = document.querySelector('video');
-    window.stream = stream; // make variable available to browser console
-    video.srcObject = stream;
-}
+// Add event listener to the button for triggering media stream initialization
+document.querySelector('#showVideo').addEventListener('click', e => initialize(e));
 
-function handleError(error) {
-    if (error.name === 'OverconstrainedError') {
-        const v = constraints.video;
-        errorMsg(`The resolution ${v.width.exact}x${v.height.exact} px is not supported by your device.`);
-    } else if (error.name === 'NotAllowedError') {
-        errorMsg('Permissions have not been granted to use your camera and ' +
-            'microphone, you need to allow the page access to your devices in ' +
-            'order for the demo to work.');
-    }
-    errorMsg(`getUserMedia error: ${error.name}`, error);
-}
-
-function errorMsg(msg, error) {
-    const errorElement = document.querySelector('#errorMsg');
-    errorElement.innerHTML += `<p>${msg}</p>`;
-    if (typeof error !== 'undefined') {
-        console.error(error);
-    }
-}
-
-async function init(e) {
+// Initialization function to request and handle media stream
+async function initialize(e) {
     try {
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        handleSuccess(stream);
-        e.target.disabled = true;
-    } catch (e) {
-        handleError(e);
+        const stream = await navigator.mediaDevices.getUserMedia(videoConstraints);
+        attachVideoStream(stream);
+        e.target.disabled = true; // Disable the button after successful initialization
+    } catch (error) {
+        onCatch(error);
     }
 }
 
-document.querySelector('#showVideo').addEventListener('click', e => init(e));
+// Function to handle successful acquisition of media stream
+function attachVideoStream(stream) {
+    const videoElement = document.querySelector('video');
+    window.stream = stream; // Make variable available to the browser console
+    videoElement.srcObject = stream;
+}
+
+// Function to handle errors during media stream acquisition
+function onCatch(error) {
+    const errorElement = document.querySelector('#errorMsg');
+    errorElement.innerHTML += `<p>Something went wrong: ${error.name}</p>`;
+}

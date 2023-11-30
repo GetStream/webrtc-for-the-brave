@@ -1,29 +1,33 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html lang="en">
 
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
     <meta id="theme-color" name="theme-color" content="#ffffff">
-
     <title>getUserMedia</title>
 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <link rel="stylesheet" href="./css/main.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 </head>
 
 <body>
-
 <div id="container">
-    <h1><a title="WebRTC samples homepage">Get a Media Stream</a>
+    <h1><a href="#" title="WebRTC samples homepage">Get a Media Stream</a>
         <span>getUserMedia</span></h1>
 
-    <video id="gum-local" autoplay playsinline></video>
-    <button id="showVideo">Open camera</button>
+    <video id="gum-local" content="width=device-width, initial-scale=0.5" autoplay playsinline></video>
+
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="showVideo">
+        Open camera
+    </button>
 
     <div id="errorMsg"></div>
 </div>
 
 <script src="js/main.js"></script>
-
 </body>
+
 </html>
