@@ -1,6 +1,6 @@
 'use strict';
 
-const shareButton = document.getElementById('startButton');
+const shareButton = document.getElementById('shareButton');
 
 shareButton.addEventListener('click', () => {
     navigator.mediaDevices.getDisplayMedia({audio: true, video: true})
