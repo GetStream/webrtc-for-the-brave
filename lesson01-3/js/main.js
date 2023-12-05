@@ -12,18 +12,18 @@ let localConnection, remoteConnection;
 let sendChannel, receiveChannel;
 const dataChannelSend = document.querySelector('textarea#dataChannelSend');
 const dataChannelReceive = document.querySelector('textarea#dataChannelReceive');
-const startButton = document.querySelector('button#startButton');
+const connectButton = document.querySelector('button#connectButton');
 const sendButton = document.querySelector('button#sendButton');
-const closeButton = document.querySelector('button#closeButton');
+const disconnectButton = document.querySelector('button#disconnectButton');
 
-startButton.onclick = createConnection;
+connectButton.onclick = createConnection;
 sendButton.onclick = sendData;
-closeButton.onclick = closeDataChannels;
+disconnectButton.onclick = closeDataChannels;
 
 function createConnection() {
     dataChannelSend.placeholder = '';
-    startButton.disabled = true;
-    closeButton.disabled = false;
+    connectButton.disabled = true;
+    disconnectButton.disabled = false;
 
     localConnection = new RTCPeerConnection();
     localConnection.onicecandidate = e => {
@@ -94,11 +94,11 @@ function onSendChannelStateChange() {
         dataChannelSend.disabled = false;
         dataChannelSend.focus();
         sendButton.disabled = false;
-        closeButton.disabled = false;
+        disconnectButton.disabled = false;
     } else {
         dataChannelSend.disabled = true;
         sendButton.disabled = true;
-        closeButton.disabled = true;
+        disconnectButton.disabled = true;
     }
 }
 
@@ -122,9 +122,9 @@ function onCatch(error) {
 }
 
 function closeDataChannels() {
-    startButton.disabled = false;
+    connectButton.disabled = false;
     sendButton.disabled = true;
-    closeButton.disabled = true;
+    disconnectButton.disabled = true;
     dataChannelSend.disabled = true;
     dataChannelSend.value = '';
     dataChannelReceive.value = '';
