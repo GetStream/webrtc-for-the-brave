@@ -7,19 +7,30 @@
 
     <title>Transmit text</title>
 
-    <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-blue.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 </head>
 
 <body>
 
 <div id="container">
-    <h1><a href="https://github.com/GetStream/webrtc-for-the-brave" title="WebRTC samples homepage">WebRTC samples</a>
-        <span>Transmit text</span></h1>
-        
+    <h4>
+        <a href="https://github.com/GetStream/webrtc-for-the-brave" title="WebRTC samples homepage">WebRTC samples</a>
+        <span>Transmit text</span>
+    </h4>
+
     <div id="buttons">
-        <button id="startButton">Start</button>
-        <button id="sendButton" disabled>Send</button>
-        <button id="closeButton" disabled>Stop</button>
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                id="startButton">Start
+        </button>
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                id="sendButton" disabled>Send
+        </button>
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                id="closeButton" disabled>Stop
+        </button>
     </div>
 
     <div id="sendReceive">
@@ -33,6 +44,8 @@
             <textarea id="dataChannelReceive" disabled></textarea>
         </div>
     </div>
+
+    <div id="errorMsg"></div>
 </div>
 
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>

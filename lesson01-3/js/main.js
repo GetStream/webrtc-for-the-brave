@@ -8,10 +8,8 @@
 
 'use strict';
 
-let localConnection;
-let remoteConnection;
-let sendChannel;
-let receiveChannel;
+let localConnection, remoteConnection;
+let sendChannel, receiveChannel;
 const dataChannelSend = document.querySelector('textarea#dataChannelSend');
 const dataChannelReceive = document.querySelector('textarea#dataChannelReceive');
 const startButton = document.querySelector('button#startButton');
