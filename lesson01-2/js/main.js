@@ -68,15 +68,12 @@ async function onCreateOfferSuccess(desc) {
         onCatch(e)
     }
 
-    console.log('pc2 setRemoteDescription start');
-
     try {
         await pc2.setRemoteDescription(desc);
     } catch (e) {
         onCatch(e)
     }
 
-    console.log('pc2 createAnswer start');
 
     try {
         const answer = await pc2.createAnswer();
@@ -93,16 +90,11 @@ function gotRemoteStream(e) {
 }
 
 async function onCreateAnswerSuccess(desc) {
-    console.log(`Answer from pc2:\n${desc.sdp}`);
-    console.log('pc2 setLocalDescription start');
-
     try {
         await pc2.setLocalDescription(desc);
     } catch (e) {
         onCatch(e)
     }
-
-    console.log('pc1 setRemoteDescription start');
 
     try {
         await pc1.setRemoteDescription(desc);
