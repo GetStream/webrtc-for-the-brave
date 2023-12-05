@@ -20,143 +20,119 @@ startButton.onclick = createConnection;
 sendButton.onclick = sendData;
 closeButton.onclick = closeDataChannels;
 
-function enableStartButton() {
-  startButton.disabled = false;
-}
-
-function disableSendButton() {
-  sendButton.disabled = true;
-}
-
 function createConnection() {
-  dataChannelSend.placeholder = '';
-  localConnection = new RTCPeerConnection();
+    dataChannelSend.placeholder = '';
+    startButton.disabled = true;
+    closeButton.disabled = false;
 
-  sendChannel = localConnection.createDataChannel('sendDataChannel');
+    localConnection = new RTCPeerConnection();
+    localConnection.onicecandidate = e => {
+        onIceCandidate(localConnection, e);
+    };
 
-  localConnection.onicecandidate = e => {
-    onIceCandidate(localConnection, e);
-  };
-  sendChannel.onopen = onSendChannelStateChange;
-  sendChannel.onclose = onSendChannelStateChange;
+    sendChannel = localConnection.createDataChannel('sendDataChannel');
+    sendChannel.onopen = onSendChannelStateChange;
+    sendChannel.onclose = onSendChannelStateChange;
 
-  remoteConnection = new RTCPeerConnection();
+    remoteConnection = new RTCPeerConnection();
+    remoteConnection.onicecandidate = e => {
+        onIceCandidate(remoteConnection, e);
+    };
 
-  remoteConnection.onicecandidate = e => {
-    onIceCandidate(remoteConnection, e);
-  };
-  remoteConnection.ondatachannel = receiveChannelCallback;
+    remoteConnection.ondatachannel = receiveChannelCallback;
 
-  localConnection.createOffer().then(
-      gotDescription1,
-      onCreateSessionDescriptionError
-  );
-  startButton.disabled = true;
-  closeButton.disabled = false;
+    localConnection.createOffer().then(
+        handleLocalSdp,
+        onCatch
+    );
 }
 
-function onCreateSessionDescriptionError(error) {
-  console.log('Failed to create session description: ' + error.toString());
+function handleLocalSdp(desc) {
+    localConnection.setLocalDescription(desc).then(onCatch);
+    remoteConnection.setRemoteDescription(desc).then(onCatch);
+    remoteConnection.createAnswer().then(
+        handleRemoteSdp,
+        onCatch
+    );
 }
 
-function sendData() {
-  const data = dataChannelSend.value;
-  sendChannel.send(data);
-  console.log('Sent Data: ' + data);
-}
-
-function closeDataChannels() {
-  console.log('Closing data channels');
-  sendChannel.close();
-  console.log('Closed data channel with label: ' + sendChannel.label);
-  receiveChannel.close();
-  console.log('Closed data channel with label: ' + receiveChannel.label);
-  localConnection.close();
-  remoteConnection.close();
-  localConnection = null;
-  remoteConnection = null;
-  console.log('Closed peer connections');
-  startButton.disabled = false;
-  sendButton.disabled = true;
-  closeButton.disabled = true;
-  dataChannelSend.value = '';
-  dataChannelReceive.value = '';
-  dataChannelSend.disabled = true;
-  disableSendButton();
-  enableStartButton();
-}
-
-function gotDescription1(desc) {
-  localConnection.setLocalDescription(desc);
-  console.log(`Offer from localConnection\n${desc.sdp}`);
-  remoteConnection.setRemoteDescription(desc);
-  remoteConnection.createAnswer().then(
-      gotDescription2,
-      onCreateSessionDescriptionError
-  );
-}
-
-function gotDescription2(desc) {
-  remoteConnection.setLocalDescription(desc);
-  console.log(`Answer from remoteConnection\n${desc.sdp}`);
-  localConnection.setRemoteDescription(desc);
-}
-
-function getOtherPc(pc) {
-  return (pc === localConnection) ? remoteConnection : localConnection;
-}
-
-function getName(pc) {
-  return (pc === localConnection) ? 'localPeerConnection' : 'remotePeerConnection';
+function handleRemoteSdp(desc) {
+    remoteConnection.setLocalDescription(desc).then(onCatch);
+    localConnection.setRemoteDescription(desc).then(onCatch);
 }
 
 function onIceCandidate(pc, event) {
-  getOtherPc(pc)
-      .addIceCandidate(event.candidate)
-      .then(
-          onAddIceCandidateSuccess,
-          onAddIceCandidateError
-      );
-  console.log(`${getName(pc)} ICE candidate: ${event.candidate ? event.candidate.candidate : '(null)'}`);
+    getOtherPc(pc)
+        .addIceCandidate(event.candidate)
+        .then(onCatch);
+
+    console.log(`${getName(pc)} ICE candidate: ${event.candidate ? event.candidate.candidate : 'undefined'}`);
 }
 
-function onAddIceCandidateSuccess() {
-  console.log('AddIceCandidate success.');
-}
+function sendData() {
+    const data = dataChannelSend.value;
+    sendChannel.send(data);
 
-function onAddIceCandidateError(error) {
-  console.log(`Failed to add Ice Candidate: ${error.toString()}`);
+    console.log('Sent data: ' + data);
 }
 
 function receiveChannelCallback(event) {
-  console.log('Receive Channel Callback');
-  receiveChannel = event.channel;
-  receiveChannel.onmessage = onReceiveMessageCallback;
-  receiveChannel.onopen = onReceiveChannelStateChange;
-  receiveChannel.onclose = onReceiveChannelStateChange;
+    receiveChannel = event.channel;
+    receiveChannel.onmessage = onReceiveMessageCallback;
+    receiveChannel.onopen = onReceiveChannelStateChange;
+    receiveChannel.onclose = onReceiveChannelStateChange;
 }
 
 function onReceiveMessageCallback(event) {
-  console.log('Received Message');
-  dataChannelReceive.value = event.data;
+    dataChannelReceive.value = event.data;
 }
 
 function onSendChannelStateChange() {
-  const readyState = sendChannel.readyState;
-  console.log('Send channel state is: ' + readyState);
-  if (readyState === 'open') {
-    dataChannelSend.disabled = false;
-    dataChannelSend.focus();
-    sendButton.disabled = false;
-    closeButton.disabled = false;
-  } else {
-    dataChannelSend.disabled = true;
-    sendButton.disabled = true;
-    closeButton.disabled = true;
-  }
+    const readyState = sendChannel.readyState;
+    console.log('Send channel state is: ' + readyState);
+    if (readyState === 'open') {
+        dataChannelSend.disabled = false;
+        dataChannelSend.focus();
+        sendButton.disabled = false;
+        closeButton.disabled = false;
+    } else {
+        dataChannelSend.disabled = true;
+        sendButton.disabled = true;
+        closeButton.disabled = true;
+    }
 }
 
 function onReceiveChannelStateChange() {
-  const readyState = receiveChannel.readyState;
-  console.log(`Receive channel state is: ${readyState}`);
+    const readyState = receiveChannel.readyState;
+    console.log(`Receive channel state is: ${readyState}`);
+}
+
+function getName(pc) {
+    return (pc === localConnection) ? 'localPeerConnection' : 'remotePeerConnection';
+}
+
+function getOtherPc(pc) {
+    return (pc === localConnection) ? remoteConnection : localConnection;
+}
+
+// Function to handle errors during media stream acquisition
+function onCatch(error) {
+    const errorElement = document.querySelector('#errorMsg');
+    errorElement.innerHTML += `<p>Something went wrong: ${error.name}</p>`;
+}
+
+function closeDataChannels() {
+    startButton.disabled = false;
+    sendButton.disabled = true;
+    closeButton.disabled = true;
+    dataChannelSend.disabled = true;
+    dataChannelSend.value = '';
+    dataChannelReceive.value = '';
+
+    sendChannel.close();
+    receiveChannel.close();
+    localConnection.close();
+    remoteConnection.close();
+    localConnection = null;
+    remoteConnection = null;
 }
