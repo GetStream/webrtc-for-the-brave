@@ -12,6 +12,14 @@ disconnectButton.addEventListener('click', disconnect);
 callPc2Button.disabled = true;
 disconnectButton.disabled = true;
 
+const rtcConfig = {
+    iceServers: [
+        {
+            urls: 'stun:stun.1.google.com:19302'
+        },
+    ],
+};
+
 let localStream, pc1, pc2;
 
 // Define video constraints
@@ -36,11 +44,11 @@ async function peerConnection() {
     callPc2Button.disabled = true;
     disconnectButton.disabled = false;
 
-    pc1 = new RTCPeerConnection();
+    pc1 = new RTCPeerConnection(rtcConfig);
     pc1.addEventListener('icecandidate', e => onIceCandidate(pc1, e));
     pc1.addEventListener('iceconnectionstatechange', e => onIceStateChange(pc1, e));
 
-    pc2 = new RTCPeerConnection();
+    pc2 = new RTCPeerConnection(rtcConfig);
     pc2.addEventListener('icecandidate', e => onIceCandidate(pc2, e));
     pc2.addEventListener('iceconnectionstatechange', e => onIceStateChange(pc2, e));
     pc2.addEventListener('track', gotRemoteStream);

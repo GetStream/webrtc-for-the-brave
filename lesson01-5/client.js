@@ -38,7 +38,7 @@ socket.on("getOffer", (sdp) => {
 
 socket.on("getAnswer", (sdp) => {
     console.log("get answer:" + sdp);
-    peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
+    peerConnection.setRemoteDescription(sdp);
 });
 
 socket.on("getCandidate", (candidate) => {
@@ -52,7 +52,7 @@ const createOffer = () => {
     peerConnection
         .createOffer({offerToReceiveAudio: true, offerToReceiveVideo: true})
         .then(sdp => {
-            peerConnection.setLocalDescription(new RTCSessionDescription(sdp));
+            peerConnection.setLocalDescription(sdp);
             socket.emit("offer", sdp);
         })
         .catch(error => {
@@ -61,7 +61,7 @@ const createOffer = () => {
 };
 
 const createAnswer = (sdp) => {
-    peerConnection.setRemoteDescription(new RTCSessionDescription(sdp)).then(() => {
+    peerConnection.setRemoteDescription(sdp).then(() => {
         console.log("answer set remote description success");
         peerConnection
             .createAnswer({
@@ -70,7 +70,7 @@ const createAnswer = (sdp) => {
             })
             .then(sdp1 => {
                 console.log("create answer");
-                peerConnection.setLocalDescription(new RTCSessionDescription(sdp1));
+                peerConnection.setLocalDescription(sdp1);
                 socket.emit("answer", sdp1);
             })
             .catch(error => {
